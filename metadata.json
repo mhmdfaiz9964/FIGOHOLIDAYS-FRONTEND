@@ -1,0 +1,7 @@
+{
+  "name": "المسافر سريلانكا - Almusafir Sri Lanka",
+  "description": "منصة سياحية رائدة متخصصة في تنظيم الرحلات في سريلانكا للمسافرين من دول الخليج العربي.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

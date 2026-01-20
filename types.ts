@@ -66,6 +66,8 @@ export interface Vehicle {
   pricePerDay: number;
 }
 
+export type Transportation = Vehicle;
+
 export interface TourCategory {
   id: string;
   title: string;

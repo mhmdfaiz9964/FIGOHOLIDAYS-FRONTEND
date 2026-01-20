@@ -20,5 +20,7 @@ export const getOffers = () => fetchApi('/offers');
 export const getHotels = () => fetchApi('/hotels');
 export const getReviews = () => fetchApi('/reviews');
 export const getPartners = () => fetchApi('/partners');
+export const getVisa = () => fetchApi('/visa');
+export const getTransportations = () => fetchApi('/transportations');
 
 export default fetchApi;

@@ -1,9 +1,24 @@
 
-import React, { useState } from 'react';
-import { VEHICLES } from '../data/mockData';
+import React, { useState, useEffect } from 'react';
+import { getTransportations } from '../api';
+import { Transportation as TransportationType } from '../types';
 
 export const Transportation: React.FC = () => {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [vehicles, setVehicles] = useState<TransportationType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getTransportations()
+      .then(data => {
+        setVehicles(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching transportations:', err);
+        setLoading(false);
+      });
+  }, []);
 
   const faqs = [
     { q: "كم تكلفة استئجار سيارة مع سائق في سريلانكا؟", a: "تختلف التكلفة حسب نوع السيارة والمسافة المقطوعة، ولكن تبدأ الأسعار عادةً من 60 دولاراً يومياً شاملة الوقود وأجرة السائق." },
@@ -22,6 +37,15 @@ export const Transportation: React.FC = () => {
       default: return '🚘';
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-900"></div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="bg-white min-h-screen">
@@ -151,7 +175,7 @@ export const Transportation: React.FC = () => {
           <p className="text-gray-500 mt-2 font-bold">اختر ما يناسب عدد أفراد عائلتك وميزانيتك</p>
         </div>
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 font-cairo">
-          {VEHICLES.map((v) => (
+          {vehicles.map((v) => (
             <div key={v.id} className="group bg-white rounded-3xl border border-gray-100 shadow-lg overflow-hidden hover:shadow-2xl transition duration-500">
               <div className="h-64 overflow-hidden relative">
                 <img src={v.image} className="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt={v.name} />

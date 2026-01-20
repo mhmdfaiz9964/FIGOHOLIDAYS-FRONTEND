@@ -1,8 +1,23 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { getVisa } from '../api';
 
 export const VisaInfo: React.FC = () => {
+  const [visaData, setVisaData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const whatsappUrl = "https://wa.me/94771440707";
+
+  useEffect(() => {
+    getVisa()
+      .then(data => {
+        setVisaData(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching visa data:', err);
+        setLoading(false);
+      });
+  }, []);
 
   const steps = [
     {
@@ -31,19 +46,36 @@ export const VisaInfo: React.FC = () => {
     }
   ];
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-900"></div>
+      </div>
+    );
+  }
+
+  const displayData = visaData || {
+    title: 'تأشيرة سريلانكا الإلكترونية (ETA)',
+    sub_title: 'دليلك الكامل للحصول على تصريح السفر لمواطني دول الخليج',
+    background_image: 'https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=2000',
+    image: 'https://images.unsplash.com/photo-1578059425538-2ef25893bc3d?q=80&w=1000',
+    description: `يتمتع مواطنو السعودية، الإمارات، الكويت، قطر، عُمان، والبحرين بتسهيلات استثنائية. 
+              يمكنكم التقديم إلكترونياً والحصول على الموافقة بسرعة، كما تتوفر خيارات التأشيرة عند الوصول في مطار كولومبو الدولي لبعض الجنسيات.`
+  };
+
   return (
     <div className="bg-white min-h-screen font-cairo">
       {/* Hero Section */}
       <div className="relative h-[45vh] flex items-center justify-center">
         <img 
-          src="https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=2000" 
+          src={displayData.background_image} 
           className="absolute inset-0 w-full h-full object-cover" 
           alt="Sri Lanka Travel"
         />
         <div className="absolute inset-0 bg-blue-950/60 backdrop-blur-[2px]"></div>
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center text-white">
-          <h1 className="text-4xl md:text-6xl font-black mb-6 drop-shadow-2xl">تأشيرة سريلانكا الإلكترونية (ETA)</h1>
-          <p className="text-xl opacity-90 font-medium">دليلك الكامل للحصول على تصريح السفر لمواطني دول الخليج</p>
+          <h1 className="text-4xl md:text-6xl font-black mb-6 drop-shadow-2xl">{displayData.title}</h1>
+          <p className="text-xl opacity-90 font-medium">{displayData.sub_title}</p>
         </div>
       </div>
 
@@ -52,10 +84,9 @@ export const VisaInfo: React.FC = () => {
         <div className="bg-gradient-to-r from-orange-50 to-white border-r-8 border-orange-500 p-8 rounded-3xl mb-20 shadow-sm flex flex-col md:flex-row items-center gap-8">
           <div className="text-6xl">🌍</div>
           <div>
-            <h2 className="text-2xl font-black text-orange-800 mb-2">تحديثات 2026 لمواطني الخليج</h2>
+            <h2 className="text-2xl font-black text-orange-800 mb-2">تحديثات لمواطني الخليج</h2>
             <p className="text-gray-700 leading-relaxed font-medium">
-              يتمتع مواطنو السعودية، الإمارات، الكويت، قطر، عُمان، والبحرين بتسهيلات استثنائية. 
-              يمكنكم التقديم إلكترونياً والحصول على الموافقة بسرعة، كما تتوفر خيارات التأشيرة عند الوصول في مطار كولومبو الدولي لبعض الجنسيات.
+              {displayData.description}
             </p>
           </div>
         </div>
@@ -99,7 +130,7 @@ export const VisaInfo: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-24">
           <div className="relative h-[500px] rounded-[3rem] overflow-hidden shadow-2xl">
             <img 
-              src="https://images.unsplash.com/photo-1578059425538-2ef25893bc3d?q=80&w=1000" 
+              src={displayData.image} 
               className="w-full h-full object-cover" 
               alt="Passport and Travel"
             />

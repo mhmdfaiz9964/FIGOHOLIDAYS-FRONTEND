@@ -1,12 +1,36 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { DESTINATIONS, TOUR_PACKAGES } from '../data/mockData';
+import { getDestination, getOffers } from '../api';
+import { DestinationDetailSkeleton } from '../components/Skeleton';
 
 export const DestinationDetail: React.FC = () => {
   const { id } = useParams();
-  const dest = DESTINATIONS.find(d => d.id === id);
-  const relatedPackages = TOUR_PACKAGES.filter(p => p.destinationId === id);
+  const [dest, setDest] = useState<any>(null);
+  const [relatedPackages, setRelatedPackages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!id) return;
+    
+    setLoading(true);
+    Promise.all([getDestination(id), getOffers()])
+      .then(([destData, allOffers]) => {
+        setDest(destData);
+        // Assuming offer has destinationId or related logic. 
+        // For now, filter by title match or other similarity if destinationId is not present.
+        setRelatedPackages(allOffers.filter((p: any) => 
+          p.destination_id?.toString() === id?.toString() || 
+          p.title?.includes(destData.name)
+        ).slice(0, 3));
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching destination details:', err);
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) return <DestinationDetailSkeleton />;
 
   if (!dest) return <div className="py-40 text-center text-2xl font-cairo">الوجهة غير موجودة</div>;
 
@@ -19,7 +43,7 @@ export const DestinationDetail: React.FC = () => {
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center text-white">
             <h1 className="text-5xl md:text-7xl font-black drop-shadow-2xl mb-4">{dest.name}</h1>
-            <p className="text-xl opacity-90">{dest.icon} استكشف لؤلؤة المحيط</p>
+            <p className="text-xl opacity-90">{dest.icon || '🌴'} استكشف لؤلؤة المحيط</p>
           </div>
         </div>
       </div>
@@ -43,8 +67,8 @@ export const DestinationDetail: React.FC = () => {
                 أبرز المعالم والأنشطة السياحية
               </h3>
               <div className="space-y-16">
-                {dest.attractions.map((attr, i) => (
-                  <div key={attr.id} className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center group">
+                {(dest.attractions || []).map((attr: any, i: number) => (
+                  <div key={attr.id || i} className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center group">
                     <div className={`overflow-hidden rounded-[2.5rem] shadow-xl h-72 ${i % 2 !== 0 ? 'md:order-2' : ''}`}>
                       <img 
                         src={attr.image} 
@@ -60,9 +84,9 @@ export const DestinationDetail: React.FC = () => {
                       <p className="text-gray-600 leading-relaxed text-lg mb-6">
                         {attr.description}
                       </p>
-                      <button className="text-[#007cc2] font-black border-b-2 border-[#007cc2] pb-1 hover:text-orange-500 hover:border-orange-500 transition-all">
+                      <a href={`https://wa.me/94771440707?text=استفسار عن ${attr.name}`} className="text-[#007cc2] font-black border-b-2 border-[#007cc2] pb-1 hover:text-orange-500 hover:border-orange-500 transition-all">
                         تحدث مع خبيرنا عن هذا المعلم
-                      </button>
+                      </a>
                     </div>
                   </div>
                 ))}
@@ -75,17 +99,17 @@ export const DestinationDetail: React.FC = () => {
               <h3 className="text-2xl font-black text-blue-950 mb-8 border-r-4 border-orange-500 pr-4">برامج تشمل {dest.name}</h3>
               <div className="space-y-6">
                 {relatedPackages.length > 0 ? (
-                  relatedPackages.map((pkg) => (
+                  relatedPackages.map((pkg: any) => (
                     <Link key={pkg.id} to={`/package/${pkg.id}`} className="block group">
                       <div className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all">
                         <div className="h-32 overflow-hidden">
-                          <img src={pkg.mainImage} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                          <img src={pkg.thumbnail_image} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                         </div>
                         <div className="p-6">
                           <h4 className="font-black text-blue-900 group-hover:text-[#007cc2] transition-colors line-clamp-1 mb-2">{pkg.title}</h4>
                           <div className="flex justify-between items-center">
                             <span className="text-xs text-gray-500 font-bold">{pkg.duration}</span>
-                            <span className="font-black text-orange-500">{pkg.currency}{pkg.price}</span>
+                            <span className="font-black text-orange-500">${pkg.discountPrice || pkg.price}</span>
                           </div>
                         </div>
                       </div>
@@ -116,3 +140,4 @@ export const DestinationDetail: React.FC = () => {
     </div>
   );
 };
+

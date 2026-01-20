@@ -117,4 +117,86 @@ export const TransportationSkeleton = () => {
   );
 };
 
+export const PackageDetailSkeleton = () => {
+  return (
+    <div className="bg-[#f8f9fa] pb-20 font-cairo">
+      <div className="bg-white border-b py-3">
+        <div className="max-w-7xl mx-auto px-4">
+          <Skeleton className="w-64 h-4" />
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-8">
+            <Skeleton className="w-3/4 h-10 mb-6" />
+            <Skeleton className="w-full aspect-video rounded-2xl mb-6" />
+            <Skeleton className="w-full h-20 rounded-xl mb-8" />
+            <div className="space-y-10">
+              {[1, 2].map(i => (
+                <div key={i} className="bg-white rounded-2xl h-80 border border-gray-100 overflow-hidden">
+                  <div className="grid grid-cols-1 md:grid-cols-2 h-full">
+                    <div className="p-8">
+                      <Skeleton className="w-1/2 h-8 mb-4" />
+                      <Skeleton className="w-full h-4 mb-2" />
+                      <Skeleton className="w-full h-4 mb-2" />
+                      <Skeleton className="w-2/3 h-4" />
+                    </div>
+                    <Skeleton className="h-full w-full" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="lg:col-span-4">
+            <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-xl h-96">
+                <Skeleton className="w-1/2 h-8 mb-4" />
+                <Skeleton className="w-full h-4 mb-10" />
+                <div className="space-y-6">
+                    <Skeleton className="w-full h-14 rounded-xl" />
+                    <Skeleton className="w-full h-14 rounded-xl" />
+                    <Skeleton className="w-full h-14 rounded-xl" />
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const DestinationDetailSkeleton = () => {
+  return (
+    <div className="bg-white font-cairo">
+      <Skeleton className="h-[50vh] w-full" />
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+          <div className="lg:col-span-2">
+            <Skeleton className="w-1/3 h-10 mb-8" />
+            <Skeleton className="w-full h-4 mb-2" />
+            <Skeleton className="w-full h-4 mb-2" />
+            <Skeleton className="w-full h-4 mb-12" />
+            <div className="space-y-16">
+              {[1, 2].map(i => (
+                <div key={i} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <Skeleton className="h-72 w-full rounded-[2.5rem]" />
+                  <div>
+                    <Skeleton className="w-3/4 h-8 mb-4" />
+                    <Skeleton className="w-full h-4 mb-2" />
+                    <Skeleton className="w-full h-4 mb-2" />
+                    <Skeleton className="w-1/2 h-4" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="lg:col-span-1">
+            <Skeleton className="w-full h-64 rounded-[2rem] mb-8" />
+            <Skeleton className="w-full h-48 rounded-[2rem]" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default Skeleton;

@@ -17,10 +17,13 @@ export const getHeroes = () => fetchApi('/heroes');
 export const getSettings = () => fetchApi('/settings');
 export const getCategories = () => fetchApi('/categories');
 export const getOffers = () => fetchApi('/offers');
+export const getOffer = (id: string) => fetchApi(`/offers/${id}`);
 export const getHotels = () => fetchApi('/hotels');
 export const getReviews = () => fetchApi('/reviews');
 export const getPartners = () => fetchApi('/partners');
 export const getVisa = () => fetchApi('/visa');
 export const getTransportations = () => fetchApi('/transportations');
+export const getDestinations = () => fetchApi('/destinations');
+export const getDestination = (id: string) => fetchApi(`/destinations/${id}`);
 
 export default fetchApi;

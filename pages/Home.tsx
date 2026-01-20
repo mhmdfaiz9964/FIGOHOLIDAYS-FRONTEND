@@ -278,6 +278,15 @@ export const Home: React.FC = () => {
                     </span>
                   </div>
                   <p className="text-sm text-gray-500 line-clamp-2 mb-6">{hotel.description}</p>
+                  
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {(hotel.amenities || []).slice(0, 3).map((amenity: string, idx: number) => (
+                      <span key={idx} className="bg-blue-50 text-[#007cc2] text-[9px] font-black px-2 py-1 rounded border border-blue-100 uppercase">
+                        {amenity}
+                      </span>
+                    ))}
+                  </div>
+
                   <div className="flex justify-between items-center pt-4 border-t border-gray-50">
                     <div className="text-lg font-black text-orange-500">{hotel.currency}{hotel.pricePerNight}<span className="text-[10px] text-gray-400 font-bold"> / ليلة</span></div>
                     <span className="text-[#007cc2] text-xs font-black group-hover:gap-2 flex items-center gap-1 transition-all">احجز الآن ←</span>

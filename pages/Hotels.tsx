@@ -1,26 +1,41 @@
-
-import React, { useState, useMemo } from 'react';
-// Fix: Import Link from react-router-dom to resolve "Cannot find name 'Link'" error.
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { HOTELS, HOTEL_CATEGORIES } from '../data/mockData';
-import { HotelCategory } from '../types';
+import { HOTEL_CATEGORIES } from '../data/mockData';
+import { HotelCategory, Hotel } from '../types';
+import { getHotels } from '../api';
 
 export const Hotels: React.FC = () => {
+  const [hotels, setHotels] = useState<Hotel[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<HotelCategory | 'all'>('all');
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
 
-  const locations = useMemo(() => {
-    const locs = Array.from(new Set(HOTELS.map(h => h.location)));
-    return locs;
+  useEffect(() => {
+    getHotels()
+      .then(data => {
+        setHotels(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching hotels:', err);
+        setLoading(false);
+      });
   }, []);
 
+  const locations = useMemo(() => {
+    const locs = Array.from(new Set(hotels.map(h => h.location)));
+    return locs;
+  }, [hotels]);
+
   const filteredHotels = useMemo(() => {
-    return HOTELS.filter(hotel => {
-      const categoryMatch = selectedCategory === 'all' || hotel.category === selectedCategory;
+    return hotels.filter(hotel => {
+      const categoryMatch = selectedCategory === 'all' || 
+                           hotel.category === selectedCategory || 
+                           hotel.hotel_type?.title === selectedCategory; 
       const locationMatch = selectedLocation === 'all' || hotel.location === selectedLocation;
       return categoryMatch && locationMatch;
     });
-  }, [selectedCategory, selectedLocation]);
+  }, [hotels, selectedCategory, selectedLocation]);
 
   return (
     <div className="bg-[#f8f9fa] min-h-screen font-cairo">
@@ -81,60 +96,66 @@ export const Hotels: React.FC = () => {
 
       {/* Hotels Grid */}
       <section className="max-w-7xl mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {filteredHotels.map((hotel) => (
-            <div key={hotel.id} className="group bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 flex flex-col h-full">
-              <div className="h-72 relative overflow-hidden">
-                <img src={hotel.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={hotel.name} />
-                <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-lg flex items-center gap-1">
-                   <span className="text-orange-500 font-black">★</span>
-                   <span className="text-blue-900 font-black text-sm">{hotel.stars} نجوم</span>
-                </div>
-                <div className="absolute bottom-6 left-6 bg-blue-900/80 backdrop-blur-md px-4 py-1 rounded-full text-white text-[10px] font-black uppercase tracking-widest">
-                  {HOTEL_CATEGORIES.find(c => c.id === hotel.category)?.title}
-                </div>
-              </div>
-
-              <div className="p-8 flex flex-col flex-grow">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-xl font-black text-blue-950 leading-tight group-hover:text-[#007cc2] transition-colors">
-                    {hotel.name}
-                  </h3>
-                  <span className="text-gray-400 flex items-center gap-1 text-xs shrink-0 bg-gray-50 px-3 py-1 rounded-lg">
-                    <span>📍</span>
-                    {hotel.location}
-                  </span>
-                </div>
-                
-                <p className="text-sm text-gray-500 line-clamp-2 mb-8 flex-grow leading-relaxed">
-                  {hotel.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mb-8">
-                  {hotel.amenities.map((amenity, idx) => (
-                    <span key={idx} className="bg-blue-50 text-[#007cc2] text-[10px] font-black px-3 py-1 rounded-lg border border-blue-100">
-                      {amenity}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="flex justify-between items-center pt-6 border-t border-gray-50 mt-auto">
-                  <div>
-                    <span className="text-gray-400 text-[10px] block font-bold mb-1 uppercase tracking-wider">سعر الليلة من</span>
-                    <div className="text-2xl font-black text-orange-500 tracking-tighter">
-                      {hotel.currency}{hotel.pricePerNight}
-                    </div>
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#007cc2]"></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {filteredHotels.map((hotel) => (
+              <div key={hotel.id} className="group bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 flex flex-col h-full">
+                <div className="h-72 relative overflow-hidden">
+                  <img src={hotel.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={hotel.name} />
+                  <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-lg flex items-center gap-1">
+                     <span className="text-orange-500 font-black">★</span>
+                     <span className="text-blue-900 font-black text-sm">{hotel.stars} نجوم</span>
                   </div>
-                  <button className="bg-blue-900 text-white px-8 py-3 rounded-2xl font-black text-sm shadow-xl hover:bg-orange-500 transition-all transform group-hover:-translate-y-1">
-                    طلب الحجز
-                  </button>
+                  <div className="absolute bottom-6 left-6 bg-blue-900/80 backdrop-blur-md px-4 py-1 rounded-full text-white text-[10px] font-black uppercase tracking-widest">
+                    {hotel.hotel_type?.title || HOTEL_CATEGORIES.find(c => c.id === hotel.category)?.title}
+                  </div>
+                </div>
+
+                <div className="p-8 flex flex-col flex-grow">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-xl font-black text-blue-950 leading-tight group-hover:text-[#007cc2] transition-colors">
+                      {hotel.name}
+                    </h3>
+                    <span className="text-gray-400 flex items-center gap-1 text-xs shrink-0 bg-gray-50 px-3 py-1 rounded-lg">
+                      <span>📍</span>
+                      {hotel.location}
+                    </span>
+                  </div>
+                  
+                  <p className="text-sm text-gray-500 line-clamp-2 mb-8 flex-grow leading-relaxed">
+                    {hotel.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 mb-8">
+                    {(hotel.amenities || []).map((amenity, idx) => (
+                      <span key={idx} className="bg-blue-50 text-[#007cc2] text-[10px] font-black px-3 py-1 rounded-lg border border-blue-100">
+                        {amenity}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="flex justify-between items-center pt-6 border-t border-gray-50 mt-auto">
+                    <div>
+                      <span className="text-gray-400 text-[10px] block font-bold mb-1 uppercase tracking-wider">سعر الليلة من</span>
+                      <div className="text-2xl font-black text-orange-500 tracking-tighter">
+                        {hotel.currency}{hotel.pricePerNight}
+                      </div>
+                    </div>
+                    <button className="bg-blue-900 text-white px-8 py-3 rounded-2xl font-black text-sm shadow-xl hover:bg-orange-500 transition-all transform group-hover:-translate-y-1">
+                      طلب الحجز
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
-        {filteredHotels.length === 0 && (
+        {!loading && filteredHotels.length === 0 && (
           <div className="text-center py-32">
             <div className="text-8xl mb-8 opacity-20">🏨</div>
             <h3 className="text-3xl font-black text-gray-300">عذراً، لا توجد نتائج مطابقة لخياراتك</h3>

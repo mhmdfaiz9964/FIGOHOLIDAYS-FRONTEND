@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { getTransportations } from '../api';
 import { Transportation as TransportationType } from '../types';
+import { TransportationSkeleton } from '../components/Skeleton';
 
 export const Transportation: React.FC = () => {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
@@ -37,14 +38,6 @@ export const Transportation: React.FC = () => {
       default: return '🚘';
     }
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-900"></div>
-      </div>
-    );
-  }
 
 
   return (
@@ -174,35 +167,40 @@ export const Transportation: React.FC = () => {
           <h2 className="text-3xl font-bold text-blue-950">أنواع السيارات المتوفرة لدينا</h2>
           <p className="text-gray-500 mt-2 font-bold">اختر ما يناسب عدد أفراد عائلتك وميزانيتك</p>
         </div>
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 font-cairo">
-          {vehicles.map((v) => (
-            <div key={v.id} className="group bg-white rounded-3xl border border-gray-100 shadow-lg overflow-hidden hover:shadow-2xl transition duration-500">
-              <div className="h-64 overflow-hidden relative">
-                <img src={v.image} className="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt={v.name} />
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-lg text-2xl">
-                  {getVehicleIcon(v.type)}
-                </div>
-              </div>
-              <div className="p-8">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-xl font-black text-blue-950 leading-tight">{v.name}</h3>
-                  <span className="bg-blue-50 text-[#007cc2] text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">{v.type}</span>
-                </div>
-                <div className="flex gap-6 mb-8 text-sm text-gray-500 font-bold">
-                  <span className="flex items-center gap-2">👤 {v.seats} مقاعد</span>
-                  <span className="flex items-center gap-2">🧳 {v.bags} حقائب</span>
-                </div>
-                <div className="flex justify-between items-center pt-6 border-t border-gray-100">
-                  <div>
-                    <p className="text-xs text-gray-400 font-bold">يبدأ من اليوم</p>
-                    <p className="text-2xl font-black text-orange-500 tracking-tighter">${v.pricePerDay}</p>
+        
+        {loading ? (
+          <TransportationSkeleton />
+        ) : (
+          <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 font-cairo">
+            {vehicles.map((v) => (
+              <div key={v.id} className="group bg-white rounded-3xl border border-gray-100 shadow-lg overflow-hidden hover:shadow-2xl transition duration-500">
+                <div className="h-64 overflow-hidden relative">
+                  <img src={v.image} className="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt={v.name} />
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-lg text-2xl">
+                    {getVehicleIcon(v.type)}
                   </div>
-                  <button className="bg-blue-900 text-white px-6 py-2 rounded-xl font-bold hover:bg-orange-500 transition duration-300 shadow-md">احجز الآن</button>
+                </div>
+                <div className="p-8">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-xl font-black text-blue-950 leading-tight">{v.name}</h3>
+                    <span className="bg-blue-50 text-[#007cc2] text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">{v.type}</span>
+                  </div>
+                  <div className="flex gap-6 mb-8 text-sm text-gray-500 font-bold">
+                    <span className="flex items-center gap-2">👤 {v.seats} مقاعد</span>
+                    <span className="flex items-center gap-2">🧳 {v.bags} حقائب</span>
+                  </div>
+                  <div className="flex justify-between items-center pt-6 border-t border-gray-100">
+                    <div>
+                      <p className="text-xs text-gray-400 font-bold">يبدأ من اليوم</p>
+                      <p className="text-2xl font-black text-orange-500 tracking-tighter">${v.pricePerDay}</p>
+                    </div>
+                    <button className="bg-blue-900 text-white px-6 py-2 rounded-xl font-bold hover:bg-orange-500 transition duration-300 shadow-md">احجز الآن</button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* FAQ Section */}

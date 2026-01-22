@@ -1,4 +1,6 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api/v1';
+import { CONFIG } from './config';
+
+const API_BASE_URL = CONFIG.API_BASE_URL;
 
 const fetchApi = async (endpoint: string) => {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {

@@ -1,0 +1,18 @@
+<IfModule mod_mime.c>
+    AddType application/javascript .js
+    AddType application/javascript .mjs
+    AddType application/javascript .tsx
+    AddType application/javascript .ts
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # If the request is for a real file or directory, serve it
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Otherwise, rewrite to index.html (for SPA history mode, though you are using HashRouter)
+    RewriteRule . /index.html [L]
+</IfModule>

@@ -2,13 +2,15 @@
 <IfModule mod_mime.c>
     AddType application/javascript .js
     AddType application/javascript .mjs
-    AddType application/javascript .ts
-    AddType application/javascript .tsx
 </IfModule>
 
-# Force Type for all .js files
+# More aggressive MIME type fixing for LiteSpeed/Namecheap
 <FilesMatch "\.(js|mjs)$">
-    Header set Content-Type "application/javascript"
+    <IfModule mod_headers.c>
+        Header set Content-Type "application/javascript"
+    </IfModule>
+    # This is often what LiteSpeed needs
+    ForceType application/javascript
 </FilesMatch>
 
 # Handle Single Page Application Routing

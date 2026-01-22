@@ -1,22 +1,22 @@
-
+# Force correct MIME type for JavaScript modules
 <IfModule mod_mime.c>
-    AddType application/javascript .js .mjs
+    AddType application/javascript .js
+    AddType application/javascript .mjs
 </IfModule>
 
-<IfModule mod_headers.c>
-  <FilesMatch "\.(js|mjs)$">
-    Header set Content-Type "application/javascript"
-  </FilesMatch>
-</IfModule>
+# More aggressive MIME type fixing for LiteSpeed/Namecheap
+<FilesMatch "\.(js|mjs)$">
+    <IfModule mod_headers.c>
+        Header set Content-Type "application/javascript"
+    </IfModule>
+    # This is often what LiteSpeed needs
+    ForceType application/javascript
+</FilesMatch>
 
-# SPA routing
+# Handle Single Page Application Routing
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
-
-    # Exclude JS files from being rewritten to index.html
-    RewriteCond %{REQUEST_URI} !^/dist/assets/.*\.js$
-
     RewriteRule ^index\.html$ - [L]
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d

@@ -311,8 +311,8 @@ export const Home: React.FC = () => {
         >
           {/* Double the array for seamless infinite-like scrolling */}
           {(partners.length > 0 ? [...partners, ...partners] : [...HOTEL_PARTNERS, ...HOTEL_PARTNERS]).map((partner, i) => (
-            <div key={i} className="min-w-[150px] flex flex-col items-center justify-center grayscale hover:grayscale-0 transition-all opacity-40 hover:opacity-100 transform hover:scale-110">
-              <img src={partner.image || partner.logo} alt={partner.name} className="h-16 object-contain mb-2" />
+            <div key={i} className="min-w-[250px] flex flex-col items-center justify-center grayscale hover:grayscale-0 transition-all opacity-40 hover:opacity-100 transform hover:scale-110">
+              <img src={partner.image || partner.logo} alt={partner.name} className="h-[200px] object-contain mb-2" />
               <span className="text-[10px] font-black text-blue-900 uppercase tracking-wider">{partner.name}</span>
             </div>
           ))}
@@ -375,7 +375,7 @@ export const Home: React.FC = () => {
               className="inline-flex items-center gap-3 bg-[#34e0a1] text-black px-10 py-5 rounded-3xl font-black text-lg hover:shadow-2xl transition-all hover:scale-105"
             >
               <span>مشاهدة جميع التقييمات</span>
-              <img src="https://static.tacdn.com/img2/brand_refresh/Tripadvisor_logo_mono.svg" className="h-5" alt="TA" />
+              <img src="https://www.edigitalagency.com.au/wp-content/uploads/tripadvisor-logo-circle-owl-icon-black-green-858x858.png" className="h-5" alt="TA" />
             </a>
           </div>
         </div>

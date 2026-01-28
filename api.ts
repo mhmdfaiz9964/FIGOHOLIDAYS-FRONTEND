@@ -27,5 +27,6 @@ export const getVisa = () => fetchApi('/visa');
 export const getTransportations = () => fetchApi('/transportations');
 export const getDestinations = () => fetchApi('/destinations');
 export const getDestination = (id: string) => fetchApi(`/destinations/${id}`);
+export const getRestaurants = () => fetchApi('/restaurants');
 
 export default fetchApi;

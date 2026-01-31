@@ -18,7 +18,7 @@ export const Navbar: React.FC = () => {
       }
     };
     fetchSettings();
-  }, []);
+  }, [location.pathname]); // Re-fetch on navigation
 
   const navLinks = [
     { name: 'الرئيسية', path: '/' },

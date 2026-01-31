@@ -99,9 +99,10 @@ export const PackageDetail: React.FC = () => {
                       <h3 className="text-2xl font-bold text-blue-900 mb-4 pr-10">
                         {day.title}
                       </h3>
-                      <p className="text-gray-600 leading-relaxed text-sm mb-8">
-                        {day.description}
-                      </p>
+                      <div 
+                        className="text-gray-600 leading-relaxed text-sm mb-8"
+                        dangerouslySetInnerHTML={{ __html: day.description }}
+                      />
 
                       <div className="border-t pt-6">
                         <h4 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">

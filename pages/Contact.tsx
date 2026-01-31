@@ -1,7 +1,40 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { getSettings } from '../api';
 
 export const Contact: React.FC = () => {
+  const [settings, setSettings] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getSettings()
+      .then(data => {
+        setSettings(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching settings:', err);
+        setLoading(false);
+      });
+  }, []);
+
+  const whatsapp1 = settings?.whatsapp || "94771440707";
+  const whatsapp2 = settings?.whatsapp2 || "94711307773";
+  const phone = settings?.phone || "94112559960";
+  const email1 = settings?.email || "info@almusafirsrilanka.com";
+  const email2 = settings?.email2 || "mumthaz@figoholidays.com";
+  const address = settings?.address || "225- شارع غالي الرئيسي، كولومبو، سريلانكا";
+  const website1 = settings?.website || "www.almusafirsrilanka.com";
+  const website2 = settings?.website2 || "www.figoholidays.com";
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-900"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gray-50 pb-20">
       <div className="bg-blue-900 py-20 text-white">
@@ -18,7 +51,7 @@ export const Contact: React.FC = () => {
             <div className="bg-white p-8 rounded-2xl shadow-lg border-t-4 border-orange-500">
               <div className="text-4xl mb-4">📍</div>
               <h3 className="text-xl font-bold text-blue-900 mb-2">الموقع</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">225- شارع غالي الرئيسي، كولومبو، سريلانكا</p>
+              <p className="text-gray-600 text-sm leading-relaxed">{address}</p>
             </div>
             
             <div className="bg-white p-8 rounded-2xl shadow-lg border-t-4 border-blue-900">
@@ -28,13 +61,13 @@ export const Contact: React.FC = () => {
                 <div>
                   <p className="text-xs text-gray-400 mb-1">واتساب (WhatsApp)</p>
                   <div className="flex flex-col gap-1">
-                    <a href="https://wa.me/94771440707" className="text-green-600 hover:underline font-bold text-lg">0094 771 440 707</a>
-                    <a href="https://wa.me/94711307773" className="text-green-600 hover:underline font-bold text-lg">0094 711 307 773</a>
+                    <a href={`https://wa.me/${whatsapp1.replace(/\s+/g, '')}`} className="text-green-600 hover:underline font-bold text-lg">{whatsapp1}</a>
+                    <a href={`https://wa.me/${whatsapp2.replace(/\s+/g, '')}`} className="text-green-600 hover:underline font-bold text-lg">{whatsapp2}</a>
                   </div>
                 </div>
                 <div>
                   <p className="text-xs text-gray-400 mb-1">هاتف أرضي (Landline)</p>
-                  <a href="tel:0094112559960" className="hover:text-blue-900 transition-colors text-lg">0094 112 559 960</a>
+                  <a href={`tel:${phone.replace(/\s+/g, '')}`} className="hover:text-blue-900 transition-colors text-lg">{phone}</a>
                 </div>
               </div>
             </div>
@@ -43,8 +76,8 @@ export const Contact: React.FC = () => {
               <div className="text-4xl mb-4">✉️</div>
               <h3 className="text-xl font-bold text-blue-900 mb-2">لبريد الإلكتروني</h3>
               <div className="space-y-2 text-gray-600 text-sm">
-                <a href="mailto:info@almusafirsrilanka.com" className="block hover:text-[#007cc2] transition-colors font-bold">info@almusafirsrilanka.com</a>
-                <a href="mailto:mumthaz@figoholidays.com" className="block hover:text-[#007cc2] transition-colors font-bold">mumthaz@figoholidays.com</a>
+                <a href={`mailto:${email1}`} className="block hover:text-[#007cc2] transition-colors font-bold">{email1}</a>
+                <a href={`mailto:${email2}`} className="block hover:text-[#007cc2] transition-colors font-bold">{email2}</a>
               </div>
             </div>
 
@@ -52,11 +85,11 @@ export const Contact: React.FC = () => {
               <div className="text-4xl mb-4">🌐</div>
               <h3 className="text-xl font-bold text-blue-900 mb-2">مواقعنا الإلكترونية</h3>
               <div className="space-y-3 pt-2">
-                <a href="http://www.almusafirsrilanka.com" target="_blank" rel="noopener noreferrer" className="block bg-blue-50 text-blue-900 p-3 rounded-xl text-center font-bold text-xs hover:bg-blue-100 transition-all border border-blue-100">
-                  www.almusafirsrilanka.com (العربية)
+                <a href={website1.startsWith('http') ? website1 : `http://${website1}`} target="_blank" rel="noopener noreferrer" className="block bg-blue-50 text-blue-900 p-3 rounded-xl text-center font-bold text-xs hover:bg-blue-100 transition-all border border-blue-100">
+                  {website1} (العربية)
                 </a>
-                <a href="http://www.figoholidays.com" target="_blank" rel="noopener noreferrer" className="block bg-gray-50 text-gray-600 p-3 rounded-xl text-center font-bold text-xs hover:bg-gray-100 transition-all border border-gray-100">
-                  www.figoholidays.com (English)
+                <a href={website2.startsWith('http') ? website2 : `http://${website2}`} target="_blank" rel="noopener noreferrer" className="block bg-gray-50 text-gray-600 p-3 rounded-xl text-center font-bold text-xs hover:bg-gray-100 transition-all border border-gray-100">
+                  {website2} (English)
                 </a>
               </div>
             </div>

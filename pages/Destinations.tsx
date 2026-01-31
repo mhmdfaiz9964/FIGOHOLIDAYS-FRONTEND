@@ -246,7 +246,10 @@ export const Destinations: React.FC = () => {
                         )}
                     </div>
                     <div className="p-8">
-                        <p className="text-gray-600 text-sm leading-relaxed mb-6 h-12 line-clamp-2">{dest.description}</p>
+                        <div 
+                          className="text-gray-600 text-sm leading-relaxed mb-6 h-12 line-clamp-2"
+                          dangerouslySetInnerHTML={{ __html: dest.description }}
+                        />
                         <div className="space-y-3">
                             <h4 className="text-xs font-black text-orange-500 uppercase tracking-widest border-b pb-2 mb-4">أبرز الأماكن السياحية:</h4>
                             {(dest.attractions || []).slice(0, 3).map((attr: any, i: number) => (
@@ -392,7 +395,10 @@ export const Destinations: React.FC = () => {
                         <span className="w-2 h-2 rounded-full bg-orange-600"></span>
                         {res.cuisine}
                     </div>
-                    <p className="text-gray-500 text-sm leading-relaxed mb-6 h-12 line-clamp-2">{res.description}</p>
+                    <div 
+                      className="text-gray-500 text-sm leading-relaxed mb-6 h-12 line-clamp-2"
+                      dangerouslySetInnerHTML={{ __html: res.description }}
+                    />
                     
                     {/* Map Button */}
                     {res.address && res.address !== 'موقع غير متوفر' && (

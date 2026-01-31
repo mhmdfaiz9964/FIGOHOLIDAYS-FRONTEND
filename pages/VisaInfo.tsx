@@ -85,9 +85,10 @@ export const VisaInfo: React.FC = () => {
           <div className="text-6xl">🌍</div>
           <div>
             <h2 className="text-2xl font-black text-orange-800 mb-2">تحديثات لمواطني الخليج</h2>
-            <p className="text-gray-700 leading-relaxed font-medium">
-              {displayData.description}
-            </p>
+            <div 
+              className="text-gray-700 leading-relaxed font-medium"
+              dangerouslySetInnerHTML={{ __html: displayData.description }}
+            />
           </div>
         </div>
 

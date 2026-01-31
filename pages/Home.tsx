@@ -8,7 +8,8 @@ import { HomeSkeleton } from '../components/Skeleton';
 
 export const Home: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [heroes, setHeroes] = useState<Hero[]>([]);
+  const [heroes, setHeroes] = useState<Hero | null>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [settings, setSettings] = useState<any>(null);
   const [categories, setCategories] = useState<any[]>([]);
   const [offers, setOffers] = useState<any[]>([]);
@@ -67,13 +68,22 @@ export const Home: React.FC = () => {
 
     fetchHeroes();
 
+    // Hero background slider interval
+    let sliderInterval: NodeJS.Timeout;
+    if (heroes?.background_images?.length) {
+      sliderInterval = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % (heroes.background_images?.length || 1));
+      }, 5000);
+    }
+
     return () => {
       clearInterval(categoriesInterval);
       clearInterval(hotelsInterval);
       clearInterval(reviewsInterval);
       clearInterval(partnersInterval);
+      if (sliderInterval) clearInterval(sliderInterval);
     };
-  }, []);
+  }, [heroes]);
 
   const manualScroll = (ref: React.RefObject<HTMLDivElement>, direction: 'left' | 'right', step: number) => {
     if (ref.current) {
@@ -87,35 +97,78 @@ export const Home: React.FC = () => {
     <div className="animate-fadeIn font-cairo overflow-x-hidden">
       {/* Hero Section */}
       <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
-        <img
-          src={heroes[0]?.background_image || "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=2000&auto=format&fit=crop"}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
-          alt="Sri Lanka Hero"
-        />
+        {/* Background Slider */}
+        {heroes?.background_images && heroes.background_images.length > 0 ? (
+          heroes.background_images.map((img, index) => (
+            <img
+              key={index}
+              src={img}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-2000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
+              alt={`Slide ${index}`}
+            />
+          ))
+        ) : (
+          <img
+            src={heroes?.background_image || "https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=2000&auto=format&fit=crop"}
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-100"
+            alt="Sri Lanka Hero"
+          />
+        )}
+        
         <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent"></div>
         <div className="relative z-10 text-right w-full max-w-7xl mx-auto px-4">
           <div className="max-w-2xl bg-black/20 backdrop-blur-sm p-8 rounded-3xl border border-white/20">
-            {heroes[0]?.tag && (
-              <span className="bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-bold mb-4 inline-block">{heroes[0].tag}</span>
+            {heroes?.tag && (
+              <span 
+                className="bg-orange-500 text-white px-4 py-1 rounded-full font-bold mb-4 inline-block"
+                style={{ fontSize: heroes.tag_size ? `${heroes.tag_size}px` : undefined }}
+              >
+                {heroes.tag}
+              </span>
             )}
-            <h1 className="text-4xl md:text-7xl font-black text-white mb-6 drop-shadow-2xl leading-tight">
-              {heroes[0]?.title || "سريلانكا برؤية"} <span className="text-orange-400">{heroes[0]?.highlighted_title || "عربية"}</span>
+            <h1 
+              className="font-black text-white mb-6 drop-shadow-2xl leading-tight"
+              style={{ fontSize: heroes?.title_size ? `${heroes.title_size}px` : undefined }}
+            >
+              {heroes?.title || "سريلانكا برؤية"} <span className="text-orange-400" style={{ fontSize: heroes?.highlight_size ? `${heroes.highlight_size}px` : undefined }}>{heroes?.highlighted_title || "عربية"}</span>
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 mb-10 font-medium leading-relaxed">
-              {heroes[0]?.description || "رحلات فاخرة مصممة خصيصاً للمسافر الخليجي. استمتع بجمال الطبيعة مع خصوصية تامة وخدمة ملكية."}
-            </p>
+            <div 
+              className="text-white/90 mb-10 font-medium leading-relaxed"
+              style={{ fontSize: heroes?.description_size ? `${heroes.description_size}px` : undefined }}
+              dangerouslySetInnerHTML={{ __html: heroes?.description || "رحلات فاخرة مصممة خصيصاً للمسافر الخليجي. استمتع بجمال الطبيعة مع خصوصية تامة وخدمة ملكية." }}
+            />
             <div className="flex flex-col md:flex-row gap-4">
-              <Link to={heroes[0]?.btn1_url || "/offers"} className="bg-[#007cc2] hover:bg-[#005fa3] text-white px-12 py-5 rounded-2xl font-bold text-lg transition-all shadow-2xl flex items-center justify-center gap-3 group">
-                <span>{heroes[0]?.btn1_text || "تصفح برامجنا"}</span>
+              <Link to={heroes?.btn1_url || "/offers"} className="bg-[#007cc2] hover:bg-[#005fa3] text-white px-12 py-5 rounded-2xl font-bold text-lg transition-all shadow-2xl flex items-center justify-center gap-3 group">
+                {heroes?.btn1_icon && <img src={heroes.btn1_icon} className="h-6 w-6 object-contain" alt="" />}
+                <span>{heroes?.btn1_text || "تصفح برامجنا"}</span>
                 <span className="transition-transform group-hover:translate-x-[-5px]">←</span>
               </Link>
-              <a href={heroes[0]?.btn2_url || "https://wa.me/94771440707"} className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/40 px-12 py-5 rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-3">
-                <span>{heroes[0]?.btn2_text || "استشارة مجانية"}</span>
+              <a href={heroes?.btn2_url || "https://wa.me/94771440707"} className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/40 px-12 py-5 rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-3">
+                {heroes?.btn2_icon && <img src={heroes.btn2_icon} className="h-6 w-6 object-contain" alt="" />}
+                <span>{heroes?.btn2_text || "استشارة مجانية"}</span>
                 <span className="text-green-400">💬</span>
               </a>
             </div>
           </div>
         </div>
+
+        {/* Slider Dots */}
+        {heroes?.background_images && heroes.background_images.length > 1 && (
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+            {heroes.background_images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === currentSlide 
+                    ? 'bg-orange-500 w-8' 
+                    : 'bg-white/40 hover:bg-white/60'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Tour Categories Carousel */}
@@ -160,9 +213,10 @@ export const Home: React.FC = () => {
                   <h3 className="text-xl font-black text-blue-950 mb-3 group-hover:text-[#007cc2] transition-colors leading-tight">
                     {cat.title}
                   </h3>
-                  <p className="text-sm text-gray-500 line-clamp-2 mb-4 leading-relaxed">
-                    {cat.description}
-                  </p>
+                  <div 
+                    className="text-sm text-gray-500 line-clamp-2 mb-4 leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: cat.description }}
+                  />
                   <Link to="/offers" className="mt-auto text-orange-500 text-xs font-black uppercase tracking-widest flex items-center gap-2 group-hover:gap-3 transition-all">
                     <span>عرض البرامج</span>
                     <span>←</span>
@@ -204,7 +258,10 @@ export const Home: React.FC = () => {
                 </div>
                 <div className="p-8 flex flex-col flex-grow">
                   <h3 className="text-xl font-black text-blue-950 mb-4 group-hover:text-[#007cc2] transition-colors leading-tight">{pkg.title}</h3>
-                  <p className="text-sm text-gray-500 line-clamp-2 mb-8 flex-grow">{pkg.description}</p>
+                  <div 
+                    className="text-sm text-gray-500 line-clamp-2 mb-8 flex-grow"
+                    dangerouslySetInnerHTML={{ __html: pkg.description }}
+                  />
                   <div className="flex justify-between items-center mt-auto pt-6 border-t border-gray-50">
                     <div>
                       <span className="text-gray-400 text-[10px] block font-bold mb-1">يبدأ من</span>
@@ -277,7 +334,10 @@ export const Home: React.FC = () => {
                       {hotel.location}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-500 line-clamp-2 mb-6">{hotel.description}</p>
+                  <div 
+                    className="text-sm text-gray-500 line-clamp-2 mb-6"
+                    dangerouslySetInnerHTML={{ __html: hotel.description }}
+                  />
                   
                   <div className="flex flex-wrap gap-2 mb-6">
                     {(hotel.amenities || []).slice(0, 3).map((amenity: string, idx: number) => (
@@ -356,9 +416,10 @@ export const Home: React.FC = () => {
                     <span key={i} className="text-gray-300 text-lg">●</span>
                   ))}
                 </div>
-                <p className="text-gray-600 leading-relaxed font-medium mb-8">
-                  {review.comment}
-                </p>
+                <div 
+                  className="text-gray-600 leading-relaxed font-medium mb-8"
+                  dangerouslySetInnerHTML={{ __html: review.comment }}
+                />
                 <div className="flex justify-between items-center text-[10px] text-gray-400 font-black uppercase tracking-widest border-t pt-6">
                   <span>المصدر: {review.source || 'TripAdvisor'}</span>
                   <span>{review.date}</span>

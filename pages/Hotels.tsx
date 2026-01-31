@@ -126,9 +126,10 @@ export const Hotels: React.FC = () => {
                     </span>
                   </div>
                   
-                  <p className="text-sm text-gray-500 line-clamp-2 mb-8 flex-grow leading-relaxed">
-                    {hotel.description}
-                  </p>
+                  <div 
+                    className="text-sm text-gray-500 line-clamp-2 mb-8 flex-grow leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: hotel.description }}
+                  />
 
                   <div className="flex flex-wrap gap-2 mb-8">
                     {(hotel.amenities || []).map((amenity, idx) => (

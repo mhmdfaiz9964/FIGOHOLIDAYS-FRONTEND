@@ -1,10 +1,22 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { getSettings } from '../api';
 
 export const WhatsAppButton: React.FC = () => {
+  const [settings, setSettings] = useState<any>(null);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    getSettings()
+      .then(data => setSettings(data))
+      .catch(err => console.error('Error fetching settings for WhatsApp button:', err));
+  }, [pathname]);
+
+  const whatsapp = settings?.whatsapp || "94771440707";
+
   return (
     <a
-      href="https://wa.me/94771440707"
+      href={`https://wa.me/${whatsapp.replace(/\s+/g, '')}`}
       target="_blank"
       rel="noopener noreferrer"
       className="fixed bottom-8 left-8 z-50 bg-green-500 text-white p-4 rounded-full shadow-2xl hover:bg-green-600 transition-transform hover:scale-110 flex items-center justify-center"

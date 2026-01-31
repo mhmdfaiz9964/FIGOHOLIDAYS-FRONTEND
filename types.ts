@@ -109,12 +109,16 @@ export interface Review {
 }
 
 export interface Hero {
-  id: number;
   tag: string;
+  tag_size: string;
   title: string;
+  title_size: string;
   highlighted_title: string;
+  highlight_size: string;
   description: string;
+  description_size: string;
   background_image: string;
+  background_images: string[];
   btn1_text: string;
   btn1_url: string;
   btn1_icon: string;

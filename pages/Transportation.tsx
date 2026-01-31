@@ -1,18 +1,20 @@
 
 import React, { useState, useEffect } from 'react';
-import { getTransportations } from '../api';
+import { getTransportations, getTransportationPage } from '../api';
 import { Transportation as TransportationType } from '../types';
 import { TransportationSkeleton } from '../components/Skeleton';
 
 export const Transportation: React.FC = () => {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [vehicles, setVehicles] = useState<TransportationType[]>([]);
+  const [pageContent, setPageContent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getTransportations()
-      .then(data => {
-        setVehicles(data);
+    Promise.all([getTransportations(), getTransportationPage()])
+      .then(([vehiclesData, pageData]) => {
+        setVehicles(vehiclesData);
+        setPageContent(pageData);
         setLoading(false);
       })
       .catch(err => {
@@ -21,11 +23,11 @@ export const Transportation: React.FC = () => {
       });
   }, []);
 
-  const faqs = [
-    { q: "كم تكلفة استئجار سيارة مع سائق في سريلانكا؟", a: "تختلف التكلفة حسب نوع السيارة والمسافة المقطوعة، ولكن تبدأ الأسعار عادةً من 60 دولاراً يومياً شاملة الوقود وأجرة السائق." },
-    { q: "هل السائقون يتحدثون العربية؟", a: "لدينا نخبة من السائقين الذين يتحدثون العربية والإنجليزية بطلاقة لضمان تواصل سهل ومريح." },
-    { q: "هل تشمل الأسعار الوقود والضرائب؟", a: "نعم، عروضنا عادةً ما تكون شاملة للوقود، ضرائب الطرق، وتأمين الركاب." },
-    { q: "كيف يمكنني حجز سيارة من المطار؟", a: "يمكنك الحجز مسبقاً عبر موقعنا أو الواتساب، وسيكون سائقنا بانتظارك في صالة الوصول حاملاً لوحة باسمك." }
+  const faqs = pageContent?.faqs || [
+    { question: "كم تكلفة استئجار سيارة مع سائق في سريلانكا؟", answer: "تختلف التكلفة حسب نوع السيارة والمسافة المقطوعة، ولكن تبدأ الأسعار عادةً من 60 دولاراً يومياً شاملة الوقود وأجرة السائق." },
+    { question: "هل السائقون يتحدثون العربية؟", answer: "لدينا نخبة من السائقين الذين يتحدثون العربية والإنجليزية بطلاقة لضمان تواصل سهل ومريح." },
+    { question: "هل تشمل الأسعار الوقود والضرائب؟", answer: "نعم، عروضنا عادةً ما تكون شاملة للوقود، ضرائب الطرق، وتأمين الركاب." },
+    { question: "كيف يمكنني حجز سيارة من المطار؟", answer: "يمكنك الحجز مسبقاً عبر موقعنا أو الواتساب، وسيكون سائقنا بانتظارك في صالة الوصول حاملاً لوحة باسمك." }
   ];
 
   const getVehicleIcon = (type: string) => {
@@ -47,10 +49,10 @@ export const Transportation: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="relative z-10 text-right">
             <h1 className="text-4xl lg:text-5xl font-extrabold text-blue-950 mb-6 leading-tight">
-              تأجير سيارة مع سائق في <span className="text-orange-500">سريلانكا</span> بأسعار تبدأ من $60
+              {pageContent?.main_title || "تأجير سيارة مع سائق في"} <span className="text-orange-500">{pageContent?.main_subtitle || "سريلانكا بأسعار تبدأ من $60"}</span>
             </h1>
             <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-              استمتع بتجربة سفر لا مثيل لها في مدن سريلانكا الخلابة مع خدمة تأجير السيارات الفاخرة مع سائق محترف، حيث نضع بين يديك أسطولاً متنوعاً من المركبات لتلبية كافة احتياجاتك.
+              استمتع بتجربة سفر لا ميل لها في مدن سريلانكا الخلابة مع خدمة تأجير السيارات الفاخرة مع سائق محترف، حيث نضع بين يديك أسطولاً متنوعاً من المركبات لتلبية كافة احتياجاتك.
             </p>
             
             {/* Inquiry Form */}
@@ -86,7 +88,7 @@ export const Transportation: React.FC = () => {
           <div className="relative">
             <div className="absolute inset-0 bg-blue-900/10 rounded-full blur-3xl transform -translate-x-1/2"></div>
             <img 
-              src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=1000&auto=format&fit=crop" 
+              src={pageContent?.image_01 || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=1000&auto=format&fit=crop"} 
               className="relative rounded-3xl shadow-2xl z-10 w-full h-[500px] object-cover" 
               alt="Luxury Car Sri Lanka" 
             />
@@ -130,7 +132,7 @@ export const Transportation: React.FC = () => {
       <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="order-2 lg:order-1">
-            <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=800" className="rounded-3xl shadow-2xl" alt="Driver" />
+            <img src={pageContent?.image_02 || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=800"} className="rounded-3xl shadow-2xl" alt="Driver" />
           </div>
           <div className="order-1 lg:order-2">
             <h2 className="text-3xl font-bold text-blue-950 mb-8 leading-tight">ما الذي يميز خدمة «المسافر» في سريلانكا؟</h2>
@@ -214,11 +216,11 @@ export const Transportation: React.FC = () => {
                   onClick={() => setActiveFaq(activeFaq === i ? null : i)}
                   className="w-full text-right p-6 font-bold text-blue-900 flex justify-between items-center group"
                 >
-                  <span className="group-hover:text-[#007cc2] transition-colors">{faq.q}</span>
+                  <span className="group-hover:text-[#007cc2] transition-colors">{faq.question || faq.q}</span>
                   <span className={`text-orange-500 transition-transform duration-300 ${activeFaq === i ? 'rotate-180' : ''}`}>▼</span>
                 </button>
                 <div className={`transition-all duration-300 ease-in-out ${activeFaq === i ? 'max-h-40 p-6 pt-0 border-t' : 'max-h-0 overflow-hidden opacity-0'}`}>
-                  <p className="text-gray-600 leading-relaxed font-medium pt-4">{faq.a}</p>
+                  <p className="text-gray-600 leading-relaxed font-medium pt-4">{faq.answer || faq.a}</p>
                 </div>
               </div>
             ))}

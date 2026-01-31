@@ -76,7 +76,10 @@ export const Offers: React.FC = () => {
               </div>
               <div className="p-6 flex-grow flex flex-col">
                 <h3 className="text-xl font-bold text-blue-950 mb-4 group-hover:text-orange-500 transition">{pkg.title}</h3>
-                <p className="text-gray-600 text-sm line-clamp-3 mb-6 flex-grow">{pkg.description}</p>
+                <div 
+                  className="text-gray-600 text-sm line-clamp-3 mb-6 flex-grow"
+                  dangerouslySetInnerHTML={{ __html: pkg.description }}
+                />
 
                 <div className="flex flex-wrap gap-2 mb-6">
                   {pkg.inclusions.slice(0, 3).map((inc, i) => (

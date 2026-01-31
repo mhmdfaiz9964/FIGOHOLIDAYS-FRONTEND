@@ -3,7 +3,10 @@ import { CONFIG } from './config';
 const API_BASE_URL = CONFIG.API_BASE_URL;
 
 const fetchApi = async (endpoint: string) => {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const timestamp = new Date().getTime();
+    const separator = endpoint.includes('?') ? '&' : '?';
+    const response = await fetch(`${API_BASE_URL}${endpoint}${separator}t=${timestamp}`, {
+        cache: 'no-store',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -28,5 +31,6 @@ export const getTransportations = () => fetchApi('/transportations');
 export const getDestinations = () => fetchApi('/destinations');
 export const getDestination = (id: string) => fetchApi(`/destinations/${id}`);
 export const getRestaurants = () => fetchApi('/restaurants');
+export const getTransportationPage = () => fetchApi('/transportation-page');
 
 export default fetchApi;

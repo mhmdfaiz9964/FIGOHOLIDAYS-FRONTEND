@@ -1,30 +1,43 @@
 
+export interface ItineraryActivity {
+  text: string;
+  icon?: string;
+}
+
 export interface ItineraryDay {
-  day: number;
+  id: number;
+  day: string;
   title: string;
   description: string;
-  image: string;
-  activities: string[];
+  images: string[];
+  activities: ItineraryActivity[];
 }
 
 export interface TourPackage {
-  id: string;
+  id: number;
   title: string;
-  description: string;
+  meta_description: string;
   price: number;
-  currency: string;
-  duration: string;
+  offer_price?: number;
   days: number;
-  category: 'honeymoon' | 'family' | 'luxury' | 'adventure' | 'nature' | 'wellness' | 'safari' | 'beach' | 'culture';
-  isFeatured: boolean;
-  isSpecialOffer: boolean;
-  discountPrice?: number;
-  mainImage: string;
-  gallery: string[];
+  nights: number;
+  star_rating: number;
+  thumbnail_image: string;
+  gallery_images: string[];
+  video?: string;
+  category: {
+    id: number;
+    name: string;
+  };
+  types: Array<{
+    id: number;
+    name: string;
+  }>;
+  itineraries: ItineraryDay[];
   inclusions: string[];
   exclusions: string[];
-  itinerary: ItineraryDay[];
-  destinationId: string;
+  cancellation_policy?: string;
+  more_details?: string;
 }
 
 export interface Attraction {

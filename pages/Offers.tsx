@@ -23,9 +23,14 @@ export const Offers: React.FC = () => {
     fetchOffers();
   }, []);
 
+  // Extract all unique types from all packages
+  const allTypes = Array.from(new Set(
+    packages.flatMap(pkg => pkg.types?.map(t => t.name) || [])
+  )).filter(Boolean);
+
   const filteredPackages = filter === 'all'
     ? packages
-    : packages.filter(p => p.category.name.toLowerCase().includes(filter.toLowerCase()));
+    : packages.filter(p => p.types?.some(t => t.name === filter));
 
   return (
     <div className="min-h-screen pb-20">
@@ -60,19 +65,25 @@ export const Offers: React.FC = () => {
       {/* Filter Bar */}
       <div className="max-w-7xl mx-auto px-4 mb-12">
         <div className="flex flex-wrap items-center justify-center gap-4 bg-white/50 backdrop-blur p-4 rounded-3xl border border-gray-100 shadow-sm">
-          {['all', 'honeymoon', 'family', 'luxury', 'adventure'].map((f) => (
+          <button
+            onClick={() => setFilter('all')}
+            className={`px-8 py-3 rounded-2xl font-black text-sm transition-all duration-300 ${filter === 'all'
+              ? 'bg-blue-900 text-white shadow-xl shadow-blue-900/20 scale-105'
+              : 'bg-white text-gray-500 hover:bg-gray-50'
+              }`}
+          >
+            الكل
+          </button>
+          {allTypes.map((typeName) => (
             <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-8 py-3 rounded-2xl font-black text-sm transition-all duration-300 ${filter === f
+              key={typeName}
+              onClick={() => setFilter(typeName)}
+              className={`px-8 py-3 rounded-2xl font-black text-sm transition-all duration-300 ${filter === typeName
                 ? 'bg-blue-900 text-white shadow-xl shadow-blue-900/20 scale-105'
                 : 'bg-white text-gray-500 hover:bg-gray-50'
                 }`}
             >
-              {f === 'all' ? 'الكل' :
-                f === 'honeymoon' ? 'شهر العسل' :
-                  f === 'family' ? 'للعائلات' :
-                    f === 'luxury' ? 'فاخر' : 'مغامرة'}
+              {typeName}
             </button>
           ))}
         </div>
@@ -94,7 +105,7 @@ export const Offers: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group border border-gray-100"
               >
-                <Link href={`/package/${pkg.id}`}>
+                <Link to={`/package/${pkg.id}`}>
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <img
                       src={pkg.thumbnail_image}
@@ -102,7 +113,7 @@ export const Offers: React.FC = () => {
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur text-blue-900 px-4 py-1 rounded-full text-sm font-bold">
-                      {pkg.category.name}
+                      {pkg.category?.name}
                     </div>
                   </div>
 

@@ -82,20 +82,25 @@ export interface Vehicle {
 export type Transportation = Vehicle;
 
 export interface TourCategory {
-  id: string;
+  id: string | number;
   title: string;
   description: string;
   image: string;
+  types?: Array<{
+    id: number;
+    name: string;
+    slug: string;
+  }>;
 }
 
-export type HotelCategory = 
-  | 'villas' 
-  | 'boutique' 
-  | 'beach' 
-  | '5star' 
-  | '4star' 
-  | '3star' 
-  | 'ayurveda' 
+export type HotelCategory =
+  | 'villas'
+  | 'boutique'
+  | 'beach'
+  | '5star'
+  | '4star'
+  | '3star'
+  | 'ayurveda'
   | 'apartments';
 
 export interface Hotel {

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { getSettings } from '../api';
+import { LazyImage } from './LazyImage';
 
 export const Footer: React.FC = () => {
   const [settings, setSettings] = useState<any>(null);
@@ -37,25 +38,14 @@ export const Footer: React.FC = () => {
         <div className="col-span-1 md:col-span-1">
           <Link to="/" className="flex flex-col items-start leading-none mb-8 group">
             <div className="flex items-center gap-1 mb-1">
-               {settings?.logo ? (
-                 <img src={settings.logo} alt="Figo Holidays Logo" className="h-10 object-contain" />
-               ) : (
-                 <>
-                   <div className="w-8 h-8 bg-[#007cc2] rounded-lg rounded-tr-[15px] relative overflow-hidden flex items-center justify-center">
-                      <div className="w-4 h-4 bg-white rounded-full absolute -bottom-1"></div>
-                   </div>
-                   <div className="text-orange-400 text-2xl">☀️</div>
-                 </>
-               )}
+              {settings?.footer_logo || settings?.logo ? (
+                <LazyImage src={settings.footer_logo || settings.logo} alt="Figo Holidays Logo" className="h-10 w-auto" style={{ objectFit: 'contain' }} />
+              ) : (
+                <>
+                </>
+              )}
             </div>
-            <div className="flex flex-col">
-              <span className="text-2xl font-black text-white tracking-tight group-hover:text-[#007cc2] transition-colors">
-                المسافر<span className="text-[#007cc2]">سريلانكا</span>
-              </span>
-              <span className="text-[10px] font-bold text-gray-400 tracking-[0.2em] -mt-1">
-                ALMUSAFIR <span className="text-[#007cc2]">SRILANKA</span>
-              </span>
-            </div>
+
           </Link>
           <p className="text-gray-400 leading-relaxed font-medium">
             شريكك الموثوق في سريلانكا. متخصصون في تقديم تجارب سياحية فاخرة ومخصصة للمسافرين من دول مجلس التعاون الخليجي منذ عام 2014.
@@ -145,9 +135,9 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
         <p className="text-gray-500 text-xs font-bold">&copy; 2026 المسافر سريلانكا. جميع الحقوق محفوظة.</p>
         <div className="flex items-center gap-8">
-           <img src="https://img.icons8.com/color/48/000000/visa.png" className="h-6 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" alt="Visa" />
-           <img src="https://img.icons8.com/color/48/000000/mastercard.png" className="h-6 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" alt="MasterCard" />
-           <img src="https://img.icons8.com/color/48/000000/amex.png" className="h-6 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" alt="Amex" />
+          <img src="https://img.icons8.com/color/48/000000/visa.png" className="h-6 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" alt="Visa" />
+          <img src="https://img.icons8.com/color/48/000000/mastercard.png" className="h-6 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" alt="MasterCard" />
+          <img src="https://img.icons8.com/color/48/000000/amex.png" className="h-6 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" alt="Amex" />
         </div>
       </div>
     </footer>

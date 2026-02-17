@@ -4,6 +4,7 @@ import { getOffer, getOffers } from '../api';
 import { TourPackage } from '../types';
 import { PackageDetailSkeleton } from '../components/Skeleton';
 import { motion } from 'framer-motion';
+import { LazyImage } from '../components/LazyImage';
 
 export const PackageDetail: React.FC = () => {
   const { id } = useParams();
@@ -24,23 +25,34 @@ export const PackageDetail: React.FC = () => {
     if (!id) return;
 
     setLoading(true);
-    Promise.all([getOffer(id), getOffers()])
-      .then(([offerData, allOffers]) => {
+
+    // Fetch individual components to allow partial loading if one fails
+    getOffer(id)
+      .then(offerData => {
         setPkg(offerData);
-        setOtherPackages(allOffers.filter((o: TourPackage) => o.id.toString() !== id.toString()).slice(0, 3));
         setLoading(false);
       })
       .catch(err => {
         console.error('Error fetching package details:', err);
         setLoading(false);
       });
+
+    getOffers()
+      .then(allOffers => {
+        setOtherPackages(
+          allOffers
+            .filter((o: TourPackage) => o.id.toString() !== id.toString())
+            .slice(0, 3)
+        );
+      })
+      .catch(err => console.error('Error fetching other packages:', err));
   }, [id]);
 
   const handleWhatsApp = () => {
     if (!pkg) return;
     const message = `مرحباً، أود الاستفسار عن باقة: ${pkg.title}\nالاسم: ${formData.name}\nالهاتف: ${formData.phone}\nعدد الأشخاص: ${formData.guests}\nالتاريخ: ${formData.date}\nالرسالة: ${formData.message}`;
     const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/966500000000?text=${encodedMessage}`, '_blank');
+    window.open(`https://wa.me/94771440707?text=${encodedMessage}`, '_blank');
   };
 
   const handleEmail = (e: React.FormEvent) => {
@@ -81,7 +93,7 @@ export const PackageDetail: React.FC = () => {
               {pkg.video ? (
                 <video src={pkg.video} controls className="w-full h-full object-cover" />
               ) : (
-                <img src={pkg.thumbnail_image} alt={pkg.title} className="w-full h-full object-cover" />
+                <LazyImage src={pkg.thumbnail_image} alt={pkg.title} className="w-full h-full" />
               )}
             </div>
 
@@ -98,7 +110,7 @@ export const PackageDetail: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                   <span className="text-xl">💎</span>
-                  <span className="text-sm font-bold">{pkg.category.name}</span>
+                  <span className="text-sm font-bold">{pkg.category?.name || 'برامج سياحية'}</span>
                 </div>
               </div>
               <div className="text-blue-900 font-bold text-xl flex flex-col items-end">
@@ -123,7 +135,7 @@ export const PackageDetail: React.FC = () => {
               البرنامج السياحي
             </h3>
             <div className="space-y-10">
-              {pkg.itineraries.map((day) => (
+              {(pkg.itineraries || []).map((day) => (
                 <div key={day.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
                   <div className="absolute top-0 right-0 bg-blue-900 text-white w-14 h-14 flex flex-col items-center justify-center rounded-bl-3xl font-bold shadow-lg z-10">
                     <span className="text-xs">يوم</span>
@@ -155,7 +167,7 @@ export const PackageDetail: React.FC = () => {
                     </div>
 
                     <div className="relative h-64 md:h-auto overflow-hidden">
-                      <img src={day.images?.[0] || pkg.thumbnail_image} className="w-full h-full object-cover" alt={day.title} />
+                      <LazyImage src={day.images?.[0] || pkg.thumbnail_image} className="w-full h-full" alt={day.title} />
                       {day.images && day.images.length > 1 && (
                         <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full text-xs font-medium">
                           1 / {day.images.length} صور
@@ -284,7 +296,7 @@ export const PackageDetail: React.FC = () => {
               {/* Special Offer Banner */}
               {pkg.types && pkg.types.length > 0 && (
                 <div className="relative rounded-2xl overflow-hidden h-48 group cursor-pointer shadow-lg">
-                  <img src={pkg.sidebar_banner_image || pkg.thumbnail_image} className="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="" />
+                  <LazyImage src={pkg.sidebar_banner_image || pkg.thumbnail_image} className="w-full h-full transition duration-700 group-hover:scale-110" alt="" />
                   <div className="absolute inset-0 bg-gradient-to-t from-blue-900/90 to-transparent flex flex-col justify-end p-6 text-white">
                     <span className="bg-white/20 backdrop-blur-md self-start px-3 py-1 rounded-full text-[10px] mb-2 font-bold">عروض {pkg.types[0].name}</span>
                     <h4 className="text-xl font-bold mb-2">{pkg.title}</h4>
@@ -310,13 +322,13 @@ export const PackageDetail: React.FC = () => {
             {otherPackages.map((o) => (
               <Link key={o.id} to={`/package/${o.id}`} className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 group hover:shadow-2xl transition duration-500 h-full flex flex-col">
                 <div className="h-56 relative overflow-hidden">
-                  <img src={o.thumbnail_image} className="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt={o.title} />
+                  <LazyImage src={o.thumbnail_image} className="w-full h-full transition duration-700 group-hover:scale-110" alt={o.title} />
                   <div className="absolute top-4 right-4 bg-orange-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg">أكثر مبيعاً</div>
                 </div>
                 <div className="p-6 flex flex-col flex-grow">
                   <h4 className="text-lg font-bold text-blue-900 mb-4 group-hover:text-orange-500 transition line-clamp-2">{o.title}</h4>
                   <div className="flex items-center justify-between text-xs text-gray-400 border-t pt-4 mt-auto">
-                    <span className="flex items-center gap-1">📍 {o.category.name}</span>
+                    <span className="flex items-center gap-1">📍 {o.category?.name || 'سريلانكا'}</span>
                     <span className="flex items-center gap-1">⏱️ {o.days} أيام</span>
                     <span className="text-blue-900 font-extrabold text-sm">${o.price}</span>
                   </div>

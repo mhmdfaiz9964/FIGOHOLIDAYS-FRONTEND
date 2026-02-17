@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { getSettings } from '../api';
+import { LazyImage } from './LazyImage';
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,22 +41,10 @@ export const Navbar: React.FC = () => {
           <div className="flex-shrink-0 flex items-center">
             <Link to="/" className="flex flex-col items-start leading-none group">
               {settings?.logo ? (
-                <img src={settings.logo} alt="Logo" className="h-16 object-contain" />
+                <LazyImage src={settings.logo} alt="Logo" className="h-16 w-auto" style={{ objectFit: 'contain' }} />
               ) : (
                 <>
-                  <div className="flex items-center gap-1 mb-1">
-                     <div className="w-8 h-8 bg-[#007cc2] rounded-lg rounded-tr-[15px] relative overflow-hidden flex items-center justify-center">
-                        <div className="w-4 h-4 bg-white rounded-full absolute -bottom-1"></div>
-                     </div>
-                     <div className="text-orange-400 text-2xl">☀️</div>
-                  </div>
                   <div className="flex flex-col">
-                    <span className="text-2xl font-black text-[#1a1a1a] tracking-tight group-hover:text-[#007cc2] transition-colors">
-                      المسافر<span className="text-[#007cc2]">سريلانكا</span>
-                    </span>
-                    <span className="text-[10px] font-bold text-gray-400 tracking-[0.2em] -mt-1">
-                      ALMUSAFIR <span className="text-[#007cc2]">SRILANKA</span>
-                    </span>
                   </div>
                 </>
               )}
@@ -68,11 +57,10 @@ export const Navbar: React.FC = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`${
-                  isActive(link.path)
-                    ? 'text-[#007cc2] font-bold border-b-2 border-[#007cc2]'
-                    : 'text-gray-600 hover:text-[#007cc2]'
-                } transition-all px-2 py-2 text-sm font-bold`}
+                className={`${isActive(link.path)
+                  ? 'text-[#007cc2] font-bold border-b-2 border-[#007cc2]'
+                  : 'text-gray-600 hover:text-[#007cc2]'
+                  } transition-all px-2 py-2 text-sm font-bold`}
               >
                 {link.name}
               </Link>
@@ -113,9 +101,8 @@ export const Navbar: React.FC = () => {
               key={link.path}
               to={link.path}
               onClick={() => setIsOpen(false)}
-              className={`block px-4 py-4 text-base font-bold rounded-xl transition ${
-                isActive(link.path) ? 'bg-blue-50 text-[#007cc2]' : 'text-gray-700 hover:bg-gray-50'
-              }`}
+              className={`block px-4 py-4 text-base font-bold rounded-xl transition ${isActive(link.path) ? 'bg-blue-50 text-[#007cc2]' : 'text-gray-700 hover:bg-gray-50'
+                }`}
             >
               {link.name}
             </Link>

@@ -1,6 +1,6 @@
-
 import React, { useEffect, useState } from 'react';
 import { getVisa } from '../api';
+import { LazyImage } from '../components/LazyImage';
 
 export const VisaInfo: React.FC = () => {
   const [visaData, setVisaData] = useState<any>(null);
@@ -54,22 +54,15 @@ export const VisaInfo: React.FC = () => {
     );
   }
 
-  const displayData = visaData || {
-    title: 'تأشيرة سريلانكا الإلكترونية (ETA)',
-    sub_title: 'دليلك الكامل للحصول على تصريح السفر لمواطني دول الخليج',
-    background_image: 'https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=2000',
-    image: 'https://images.unsplash.com/photo-1578059425538-2ef25893bc3d?q=80&w=1000',
-    description: `يتمتع مواطنو السعودية، الإمارات، الكويت، قطر، عُمان، والبحرين بتسهيلات استثنائية. 
-              يمكنكم التقديم إلكترونياً والحصول على الموافقة بسرعة، كما تتوفر خيارات التأشيرة عند الوصول في مطار كولومبو الدولي لبعض الجنسيات.`
-  };
+  const displayData = visaData || {};
 
   return (
     <div className="bg-white min-h-screen font-cairo">
       {/* Hero Section */}
       <div className="relative h-[45vh] flex items-center justify-center">
-        <img 
-          src={displayData.background_image} 
-          className="absolute inset-0 w-full h-full object-cover" 
+        <LazyImage
+          src={displayData.background_image}
+          className="absolute inset-0 w-full h-full"
           alt="Sri Lanka Travel"
         />
         <div className="absolute inset-0 bg-blue-950/60 backdrop-blur-[2px]"></div>
@@ -85,7 +78,7 @@ export const VisaInfo: React.FC = () => {
           <div className="text-6xl">🌍</div>
           <div>
             <h2 className="text-2xl font-black text-orange-800 mb-2">تحديثات لمواطني الخليج</h2>
-            <div 
+            <div
               className="text-gray-700 leading-relaxed font-medium"
               dangerouslySetInnerHTML={{ __html: displayData.description }}
             />
@@ -113,33 +106,33 @@ export const VisaInfo: React.FC = () => {
               </div>
             ))}
           </div>
-          
+
           <div className="mt-12 text-center">
-             <a 
-               href="http://www.eta.gov.lk" 
-               target="_blank" 
-               rel="noopener noreferrer" 
-               className="inline-flex items-center gap-2 text-blue-600 font-black hover:underline"
-             >
-               <span>رابط الموقع الرسمي (ETA)</span>
-               <span className="text-xl">🔗</span>
-             </a>
+            <a
+              href="http://www.eta.gov.lk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-blue-600 font-black hover:underline"
+            >
+              <span>رابط الموقع الرسمي (ETA)</span>
+              <span className="text-xl">🔗</span>
+            </a>
           </div>
         </div>
 
         {/* Requirements & Info Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-24">
           <div className="relative h-[500px] rounded-[3rem] overflow-hidden shadow-2xl">
-            <img 
-              src={displayData.image} 
-              className="w-full h-full object-cover" 
+            <LazyImage
+              src={displayData.image}
+              className="w-full h-full"
               alt="Passport and Travel"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-transparent to-transparent flex items-end p-12">
-               <div className="text-white">
-                 <h4 className="text-2xl font-black mb-2">تأكد من جاهزيتك</h4>
-                 <p className="opacity-90 font-medium">نحن هنا لضمان رحلة خالية من المتاعب القانونية</p>
-               </div>
+              <div className="text-white">
+                <h4 className="text-2xl font-black mb-2">تأكد من جاهزيتك</h4>
+                <p className="opacity-90 font-medium">نحن هنا لضمان رحلة خالية من المتاعب القانونية</p>
+              </div>
             </div>
           </div>
 
@@ -165,39 +158,39 @@ export const VisaInfo: React.FC = () => {
             </div>
 
             <div className="bg-blue-50 p-8 rounded-[2rem] border border-blue-100">
-               <h4 className="font-black text-blue-900 mb-4 text-xl">مدة الصلاحية والتمديد</h4>
-               <p className="text-gray-600 leading-relaxed font-medium mb-4">
-                 تُمنح التأشيرة السياحية عادة لمدة 30 يوماً. إذا كنت ترغب في البقاء لفترة أطول، يمكنك التقدم بطلب تمديد من مكتب الهجرة في كولومبو ليصل الإجمالي إلى 90 يوماً.
-               </p>
-               <div className="flex gap-4">
-                 <div className="bg-white px-4 py-2 rounded-xl text-xs font-black text-blue-900 shadow-sm">دخول مزدوج</div>
-                 <div className="bg-white px-4 py-2 rounded-xl text-xs font-black text-blue-900 shadow-sm">صالحة لـ 30 يوم</div>
-               </div>
+              <h4 className="font-black text-blue-900 mb-4 text-xl">مدة الصلاحية والتمديد</h4>
+              <p className="text-gray-600 leading-relaxed font-medium mb-4">
+                تُمنح التأشيرة السياحية عادة لمدة 30 يوماً. إذا كنت ترغب في البقاء لفترة أطول، يمكنك التقدم بطلب تمديد من مكتب الهجرة في كولومبو ليصل الإجمالي إلى 90 يوماً.
+              </p>
+              <div className="flex gap-4">
+                <div className="bg-white px-4 py-2 rounded-xl text-xs font-black text-blue-900 shadow-sm">دخول مزدوج</div>
+                <div className="bg-white px-4 py-2 rounded-xl text-xs font-black text-blue-900 shadow-sm">صالحة لـ 30 يوم</div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Support CTA */}
         <div className="bg-[#007cc2] rounded-[3rem] p-12 lg:p-20 text-white text-center relative overflow-hidden shadow-2xl">
-           <div className="relative z-10 max-w-3xl mx-auto">
-             <h3 className="text-3xl md:text-5xl font-black mb-8 leading-tight">لا داعي للقلق بشأن الإجراءات!</h3>
-             <p className="text-xl mb-12 opacity-90 font-medium leading-relaxed">
-               عند حجز أي من برامجنا السياحية، يتولى خبراؤنا تقديم الدعم الكامل والمجاني لاستخراج تصاريح السفر (ETA) لضمان دخولك السلس إلى سريلانكا.
-             </p>
-             <a 
-               href={whatsappUrl} 
-               target="_blank" 
-               rel="noopener noreferrer"
-               className="bg-white text-[#007cc2] px-16 py-6 rounded-[2rem] font-black text-xl hover:shadow-2xl hover:scale-105 transition-all inline-flex items-center gap-4"
-             >
-               <span>اطلب المساعدة الآن عبر واتساب</span>
-               <span className="text-2xl">💬</span>
-             </a>
-           </div>
-           
-           {/* Abstract shapes */}
-           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
-           <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-500/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
+          <div className="relative z-10 max-w-3xl mx-auto">
+            <h3 className="text-3xl md:text-5xl font-black mb-8 leading-tight">لا داعي للقلق بشأن الإجراءات!</h3>
+            <p className="text-xl mb-12 opacity-90 font-medium leading-relaxed">
+              عند حجز أي من برامجنا السياحية، يتولى خبراؤنا تقديم الدعم الكامل والمجاني لاستخراج تصاريح السفر (ETA) لضمان دخولك السلس إلى سريلانكا.
+            </p>
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white text-[#007cc2] px-16 py-6 rounded-[2rem] font-black text-xl hover:shadow-2xl hover:scale-105 transition-all inline-flex items-center gap-4"
+            >
+              <span>اطلب المساعدة الآن عبر واتساب</span>
+              <span className="text-2xl">💬</span>
+            </a>
+          </div>
+
+          {/* Abstract shapes */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-500/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
         </div>
       </div>
     </div>

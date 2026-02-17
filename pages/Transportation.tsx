@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { getTransportations, getTransportationPage } from '../api';
 import { Transportation as TransportationType } from '../types';
 import { TransportationSkeleton } from '../components/Skeleton';
+import { LazyImage } from '../components/LazyImage';
 
 export const Transportation: React.FC = () => {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
@@ -87,9 +87,9 @@ export const Transportation: React.FC = () => {
 
           <div className="relative">
             <div className="absolute inset-0 bg-blue-900/10 rounded-full blur-3xl transform -translate-x-1/2"></div>
-            <img
-              src={pageContent?.image_01 || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=1000&auto=format&fit=crop"}
-              className="relative rounded-3xl shadow-2xl z-10 w-full h-[500px] object-cover"
+            <LazyImage
+              src={pageContent?.image_01}
+              className="relative rounded-3xl shadow-2xl z-10 w-full h-[500px]"
               alt="Luxury Car Sri Lanka"
             />
             <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-2xl shadow-xl z-20 flex items-center gap-4">
@@ -132,7 +132,7 @@ export const Transportation: React.FC = () => {
       <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="order-2 lg:order-1">
-            <img src={pageContent?.image_02 || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=800"} className="rounded-3xl shadow-2xl" alt="Driver" />
+            <LazyImage src={pageContent?.image_02} className="rounded-3xl shadow-2xl" alt="Driver" />
           </div>
           <div className="order-1 lg:order-2">
             <h2 className="text-3xl font-bold text-blue-950 mb-8 leading-tight">ما الذي يميز خدمة «المسافر» في سريلانكا؟</h2>
@@ -177,7 +177,7 @@ export const Transportation: React.FC = () => {
             {vehicles.map((v) => (
               <div key={v.id} className="group bg-white rounded-3xl border border-gray-100 shadow-lg overflow-hidden hover:shadow-2xl transition duration-500">
                 <div className="h-64 overflow-hidden relative">
-                  <img src={v.image} className="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt={v.name} />
+                  <LazyImage src={v.image} className="w-full h-full transition duration-500 group-hover:scale-110" alt={v.name} />
                   <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-lg text-2xl">
                     {getVehicleIcon(v.type)}
                   </div>

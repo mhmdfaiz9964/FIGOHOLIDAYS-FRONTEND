@@ -54,7 +54,7 @@ export const Transportation: React.FC = () => {
             <p className="text-lg text-gray-600 mb-8 leading-relaxed">
               استمتع بتجربة سفر لا ميل لها في مدن سريلانكا الخلابة مع خدمة تأجير السيارات الفاخرة مع سائق محترف، حيث نضع بين يديك أسطولاً متنوعاً من المركبات لتلبية كافة احتياجاتك.
             </p>
-            
+
             {/* Inquiry Form */}
             <div className="bg-white p-8 rounded-3xl shadow-2xl border border-gray-100 font-cairo">
               <div className="flex gap-4 mb-6 border-b pb-4">
@@ -84,13 +84,13 @@ export const Transportation: React.FC = () => {
               </form>
             </div>
           </div>
-          
+
           <div className="relative">
             <div className="absolute inset-0 bg-blue-900/10 rounded-full blur-3xl transform -translate-x-1/2"></div>
-            <img 
-              src={pageContent?.image_01 || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=1000&auto=format&fit=crop"} 
-              className="relative rounded-3xl shadow-2xl z-10 w-full h-[500px] object-cover" 
-              alt="Luxury Car Sri Lanka" 
+            <img
+              src={pageContent?.image_01 || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=1000&auto=format&fit=crop"}
+              className="relative rounded-3xl shadow-2xl z-10 w-full h-[500px] object-cover"
+              alt="Luxury Car Sri Lanka"
             />
             <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-2xl shadow-xl z-20 flex items-center gap-4">
               <div className="bg-orange-100 p-3 rounded-full text-2xl">🚗</div>
@@ -169,7 +169,7 @@ export const Transportation: React.FC = () => {
           <h2 className="text-3xl font-bold text-blue-950">أنواع السيارات المتوفرة لدينا</h2>
           <p className="text-gray-500 mt-2 font-bold">اختر ما يناسب عدد أفراد عائلتك وميزانيتك</p>
         </div>
-        
+
         {loading ? (
           <TransportationSkeleton />
         ) : (
@@ -196,7 +196,15 @@ export const Transportation: React.FC = () => {
                       <p className="text-xs text-gray-400 font-bold">يبدأ من اليوم</p>
                       <p className="text-2xl font-black text-orange-500 tracking-tighter">${v.pricePerDay}</p>
                     </div>
-                    <button className="bg-blue-900 text-white px-6 py-2 rounded-xl font-bold hover:bg-orange-500 transition duration-300 shadow-md">احجز الآن</button>
+                    <button
+                      onClick={() => {
+                        const message = `مرحباً، أود الاستفسار عن حجز سيارة: ${v.name} (${v.type})`;
+                        window.open(`https://wa.me/94771440707?text=${encodeURIComponent(message)}`, '_blank');
+                      }}
+                      className="bg-blue-900 text-white px-6 py-2 rounded-xl font-bold hover:bg-orange-500 transition duration-300 shadow-md"
+                    >
+                      احجز الآن
+                    </button>
                   </div>
                 </div>
               </div>
@@ -212,7 +220,7 @@ export const Transportation: React.FC = () => {
           <div className="space-y-4">
             {faqs.map((faq, i) => (
               <div key={i} className="bg-white rounded-2xl shadow-sm border overflow-hidden transition-all duration-300">
-                <button 
+                <button
                   onClick={() => setActiveFaq(activeFaq === i ? null : i)}
                   className="w-full text-right p-6 font-bold text-blue-900 flex justify-between items-center group"
                 >

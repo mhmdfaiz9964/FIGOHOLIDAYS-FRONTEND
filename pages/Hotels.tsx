@@ -146,7 +146,13 @@ export const Hotels: React.FC = () => {
                         {hotel.currency}{hotel.pricePerNight}
                       </div>
                     </div>
-                    <button className="bg-blue-900 text-white px-8 py-3 rounded-2xl font-black text-sm shadow-xl hover:bg-orange-500 transition-all transform group-hover:-translate-y-1">
+                    <button 
+                      onClick={() => {
+                        const message = `مرحباً، أود الاستفسار عن حجز في فندق: ${hotel.name} (${hotel.location})`;
+                        window.open(`https://wa.me/94771440707?text=${encodeURIComponent(message)}`, '_blank');
+                      }}
+                      className="bg-blue-900 text-white px-8 py-3 rounded-2xl font-black text-sm shadow-xl hover:bg-orange-500 transition-all transform group-hover:-translate-y-1"
+                    >
                       طلب الحجز
                     </button>
                   </div>

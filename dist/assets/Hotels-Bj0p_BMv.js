@@ -1,4 +1,4 @@
-import{r as l,e as S,j as e,L as f,a as L}from"./index-BFmMqzsO.js";import{b as j}from"./mockData-CvruU7Q5.js";const X=()=>{const[i,w]=l.useState([]),[h,m]=l.useState(!0),[r,g]=l.useState("all"),[d,p]=l.useState("all"),[v,u]=l.useState(!1),[n,y]=l.useState(null),[s,o]=l.useState({name:"",phone:"",date:"",guests:"1",notes:""});l.useEffect(()=>{S().then(t=>{w(t),m(!1)}).catch(t=>{console.error("Error fetching hotels:",t),m(!1)})},[]);const N=t=>{if(t.preventDefault(),!n)return;const a=`*طلب حجز فندق من الموقع* 
+import{r as l,e as S,j as e,L as f,a as L}from"./index-DDATaFtd.js";import{b as j}from"./mockData-CvruU7Q5.js";const X=()=>{const[i,w]=l.useState([]),[h,m]=l.useState(!0),[r,g]=l.useState("all"),[d,p]=l.useState("all"),[v,u]=l.useState(!1),[n,y]=l.useState(null),[s,o]=l.useState({name:"",phone:"",date:"",guests:"1",notes:""});l.useEffect(()=>{S().then(t=>{w(t),m(!1)}).catch(t=>{console.error("Error fetching hotels:",t),m(!1)})},[]);const N=t=>{if(t.preventDefault(),!n)return;const a=`*طلب حجز فندق من الموقع* 
 
 *الفندق:* ${n.name}
 *المدينة:* ${n.location}

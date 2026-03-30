@@ -218,7 +218,7 @@ export const Home: React.FC = () => {
                 </div>
                 <div className="p-6 flex flex-col flex-grow">
                   <h3 className="text-xl font-black text-blue-950 mb-3 group-hover:text-[#007cc2] transition-colors leading-tight truncate">
-                    {cat.title}
+                    {cat.name || cat.title}
                   </h3>
                   <div
                     className="text-sm text-gray-500 line-clamp-2 mb-4 leading-relaxed"

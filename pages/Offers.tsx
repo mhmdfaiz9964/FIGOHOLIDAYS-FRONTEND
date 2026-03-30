@@ -29,26 +29,36 @@ export const Offers: React.FC = () => {
     packages.flatMap(pkg => pkg.types?.map(t => t.name) || [])
   )).filter(Boolean);
 
-  const filteredPackages = filter === 'all'
-    ? packages
-    : packages.filter(p => p.types?.some(t => t.name === filter));
+  // Star counts
+  const getStarCount = (stars: number | 'all') => {
+    if (stars === 'all') return packages.length;
+    return packages.filter(p => Number(p.star_rating) === stars).length;
+  };
+
+  const [selectedStars, setSelectedStars] = useState<number | 'all'>('all');
+
+  const filteredPackages = packages.filter(p => {
+    const typeMatch = filter === 'all' || p.types?.some(t => t.name === filter);
+    const starMatch = selectedStars === 'all' || Number(p.star_rating) === Number(selectedStars);
+    return typeMatch && starMatch;
+  });
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pb-20 bg-[#f8f9fa] font-cairo text-right" dir="rtl">
       {/* Hero Section */}
-      <div className="relative h-[400px] flex items-center justify-center text-white text-center mb-16 overflow-hidden">
+      <div className="relative h-[40vh] md:h-[50vh] flex items-center justify-center text-white text-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <LazyImage
             src="https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&q=80"
             alt="Hero background"
-            className="w-full h-full brightness-50"
+            className="w-full h-full brightness-[0.4] object-cover scale-105"
           />
         </div>
         <div className="relative z-10 max-w-4xl px-4">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-7xl font-black mb-6"
+            className="text-4xl md:text-6xl font-black mb-6 tracking-tight"
           >
             استكشف عروضنا <span className="text-blue-400">المميزة</span>
           </motion.h1>
@@ -56,37 +66,76 @@ export const Offers: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl md:text-2xl text-gray-200 font-medium"
+            className="text-lg md:text-xl text-gray-200 font-medium max-w-2xl mx-auto leading-relaxed"
           >
             اختر وجهتك المثالية من بين مجموعة واسعة من الباقات المصممة بعناية لتناسب جميع الأذواق والميزانيات
           </motion.p>
         </div>
       </div>
 
-      {/* Filter Bar */}
-      <div className="max-w-7xl mx-auto px-4 mb-12">
-        <div className="flex flex-wrap items-center justify-center gap-4 bg-white/50 backdrop-blur p-4 rounded-3xl border border-gray-100 shadow-sm">
-          <button
-            onClick={() => setFilter('all')}
-            className={`px-8 py-3 rounded-2xl font-black text-sm transition-all duration-300 ${filter === 'all'
-              ? 'bg-blue-900 text-white shadow-xl shadow-blue-900/20 scale-105'
-              : 'bg-white text-gray-500 hover:bg-gray-50'
-              }`}
-          >
-            الكل
-          </button>
-          {allTypes.map((typeName) => (
-            <button
-              key={typeName}
-              onClick={() => setFilter(typeName)}
-              className={`px-8 py-3 rounded-2xl font-black text-sm transition-all duration-300 ${filter === typeName
-                ? 'bg-blue-900 text-white shadow-xl shadow-blue-900/20 scale-105'
-                : 'bg-white text-gray-500 hover:bg-gray-50'
-                }`}
-            >
-              {typeName}
-            </button>
-          ))}
+      {/* Filter Section */}
+      <div className="max-w-7xl mx-auto px-4 -mt-10 relative z-20">
+        <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-blue-950/10 border border-blue-50 p-6 md:p-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-end">
+            
+            {/* Star Rating Filter */}
+            <div className="space-y-4">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] block px-1 flex items-center gap-2">
+                <span className="text-orange-500">★</span> تصنيف الفنادق
+              </label>
+              <div className="flex bg-slate-50 p-1.5 rounded-[1.25rem] border border-slate-100 h-[62px] shadow-inner">
+                <button
+                  onClick={() => setSelectedStars('all')}
+                  className={`relative flex-1 rounded-xl font-black text-[11px] transition-all duration-300 flex flex-col items-center justify-center group ${selectedStars === 'all' ? 'bg-[#007cc2] text-white shadow-lg' : 'text-slate-400 hover:bg-white hover:text-[#007cc2]'}`}
+                >
+                  <span className="leading-tight">الكل</span>
+                  <span className={`text-[8px] opacity-60 mt-0.5 ${selectedStars === 'all' ? 'text-white/80' : 'text-slate-400'}`}>({getStarCount('all')})</span>
+                </button>
+                {[5, 4, 3].map(s => (
+                  <button
+                    key={s}
+                    onClick={() => setSelectedStars(s)}
+                    className={`relative flex-1 rounded-xl font-black text-[11px] transition-all duration-300 flex flex-col items-center justify-center group ${selectedStars === s ? 'bg-[#007cc2] text-white shadow-lg' : 'text-slate-400 hover:bg-white hover:text-orange-500'}`}
+                  >
+                    <div className="flex items-center gap-0.5">
+                      <span>{s}</span>
+                      <span className={`${selectedStars === s ? 'text-white' : 'text-orange-400'} text-xs`}>★</span>
+                    </div>
+                    <span className={`text-[8px] opacity-60 mt-0.5 ${selectedStars === s ? 'text-white/80' : 'text-slate-400'}`}>({getStarCount(s)})</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Types Filter Dropdown */}
+            <div className="space-y-4 sm:col-span-2 lg:col-span-1">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] block px-1 flex items-center gap-2">
+                <span className="text-[#007cc2]">🌍</span> أنواع الرحلات
+              </label>
+              <div className="relative group">
+                <select
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-100 p-4 pr-12 rounded-[1.25rem] outline-none focus:ring-2 focus:ring-[#007cc2] font-black appearance-none transition-all hover:bg-slate-100 text-right text-slate-700 shadow-sm"
+                >
+                  <option value="all">كل أنواع الرحلات</option>
+                  {allTypes.map((typeName) => (
+                    <option key={typeName} value={typeName}>{typeName}</option>
+                  ))}
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#007cc2] group-hover:scale-110 transition-transform">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Search Summary Counter */}
+            <div className="lg:col-span-1 pb-2 md:pb-4 text-center lg:text-left">
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-widest bg-slate-50 inline-block px-6 py-3 rounded-2xl border border-slate-100 shadow-sm">
+                تم العثور على <span className="text-[#007cc2] text-sm mx-1">{filteredPackages.length}</span> عروض مميزة
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 

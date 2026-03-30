@@ -133,11 +133,18 @@ export const Footer: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-        <p className="text-gray-500 text-xs font-bold">&copy; 2026 المسافر سريلانكا. جميع الحقوق محفوظة.</p>
+        <div className="flex flex-col md:items-start gap-2 text-center md:text-right">
+          <p className="text-gray-500 text-xs font-bold">
+            &copy; {new Date().getFullYear()} FigoHolidays. All rights reserved.
+          </p>
+          <p className="text-gray-600 text-[10px] font-bold uppercase tracking-widest">
+            Designed and developed by <a href="https://apexwebinnovation.com" className="text-[#007cc2] hover:underline transition-colors" target="_blank" rel="noopener noreferrer">Apex Web Innovation</a>
+          </p>
+        </div>
         <div className="flex items-center gap-8">
-          <img src="https://img.icons8.com/color/48/000000/visa.png" className="h-6 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" alt="Visa" />
-          <img src="https://img.icons8.com/color/48/000000/mastercard.png" className="h-6 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" alt="MasterCard" />
-          <img src="https://img.icons8.com/color/48/000000/amex.png" className="h-6 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" alt="Amex" />
+          <img src="https://img.icons8.com/color/48/000000/visa.png" className="h-4 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" alt="Visa" />
+          <img src="https://img.icons8.com/color/48/000000/mastercard.png" className="h-4 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" alt="MasterCard" />
+          <img src="https://img.icons8.com/color/48/000000/amex.png" className="h-4 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" alt="Amex" />
         </div>
       </div>
     </footer>
